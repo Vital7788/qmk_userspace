@@ -29,6 +29,16 @@
 
 #define MT_ESC MT(MOD_LCTL, KC_ESC)
 
+const uint16_t PROGMEM volume[] = {KC_VOLD, KC_VOLU, COMBO_END};
+const uint16_t PROGMEM volume2[] = {KC_VOLD, KC_BSPC, COMBO_END};
+const uint16_t PROGMEM volume3[] = {KC_VOLU, KC_SPC, COMBO_END};
+
+combo_t key_combos[] = {
+    COMBO(volume, KC_MUTE),
+    COMBO(volume2, LA_SYS),
+    COMBO(volume3, LA_SYS),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_LAYERS] = LAYOUT(
@@ -53,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      LA_NUM,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, LA_NUM,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    LA_SYS,           LA_SYS,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_VOLD,          KC_VOLU, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LGUI, MT_ESC,  KC_BSPC,                   KC_SPC,  LA_SYM,  KC_LALT
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
