@@ -19,8 +19,12 @@
 #define LA_SYS TT(_SYSTEM)
 #define LA_NUM MO(_NUMBERS)
 #define LA_F MO(_F_KEYS)
-#define LA_SYM LT(_SYMBOLS, KC_ENT)
+#define MT_ENT LT(_SYMBOLS, KC_ENT)
 #define MT_ESC MT(MOD_LCTL, KC_ESC)
+#define MT_BSPC LT(_NUMBERS, KC_BSPC)
+#define MT_SPC MT(MOD_LSFT, KC_SPC)
+#define MT_TAB MT(MOD_LGUI, KC_TAB)
+#define MT_CAPS MT(MOD_LALT, KC_CAPS)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -64,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LGUI, MT_ESC,  KC_BSPC,                   KC_SPC,  LA_SYM,  KC_LALT
+                                    MT_TAB,  MT_ESC,  MT_BSPC,                   MT_SPC,  MT_ENT,  MT_CAPS
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
