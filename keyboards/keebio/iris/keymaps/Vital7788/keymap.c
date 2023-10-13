@@ -23,8 +23,6 @@
 #define MT_ESC MT(MOD_LCTL, KC_ESC)
 #define MT_BSPC LT(_F_KEYS, KC_BSPC)
 #define MT_SPC LT(_NUMBERS, KC_SPC)
-#define MT_TAB MT(MOD_LGUI, KC_TAB)
-#define MT_CAPS MT(MOD_LALT, KC_CAPS)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -34,12 +32,12 @@
 
 #define ALT_ESC LALT(KC_ESC)
 
-const uint16_t PROGMEM tab[] = {KC_PGDN, KC_SPC, COMBO_END};
-const uint16_t PROGMEM num[] = {KC_PGUP, KC_BSPC, COMBO_END};
+const uint16_t PROGMEM tab[] = {KC_PGDN, MT_SPC, COMBO_END};
+const uint16_t PROGMEM num[] = {KC_PGUP, MT_BSPC, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(tab, KC_TAB),
-    COMBO(num, LA_NUM),
+    COMBO(num, KC_TAB),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -68,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    MT_TAB,  MT_ESC,  MT_BSPC,                   MT_SPC,  MT_ENT,  MT_CAPS
+                                    KC_LGUI, MT_ESC,  MT_BSPC,                   MT_SPC,  MT_ENT,  KC_LALT
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -319,10 +317,6 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
             // Immediately select the hold action when another key is pressed.
             return true;
         case MT_ENT:
-            return true;
-        case MT_TAB:
-            return true;
-        case MT_CAPS:
             return true;
         default:
             // Do not select the hold action when another key is pressed.
