@@ -1,18 +1,20 @@
 #include QMK_KEYBOARD_H
 
 // Layers
-#define _QWERTY 0
-#define _GAMING1 1
-#define _GAMING2 2
-#define _GAMING2a 3
-#define _GAMING2b 4
-#define _GAMING3 5
-#define _GAMING4 6
-#define _SYMBOLS 10
-#define _NUMBERS 11
-#define _F_KEYS 12
-#define _SYSTEM 13
-#define _LAYERS 15
+enum layers {
+    _QWERTY,
+    _GAMING1,
+    _GAMING2,
+    _GAMING2a,
+    _GAMING2b,
+    _GAMING3,
+    _GAMING4,
+    _SYMBOLS,
+    _NUMBERS,
+    _F_KEYS,
+    _SYSTEM,
+    _LAYERS
+};
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
@@ -294,7 +296,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-/*
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_LSFT:
@@ -309,7 +310,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
     }
 }
-*/
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -321,77 +321,5 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         default:
             // Do not select the hold action when another key is pressed.
             return false;
-    }
-}
-
-static bool shift_held = false;
-static bool lshift_held = false;
-static bool rshift_held = false;
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case KC_LSFT:
-            lshift_held = record->event.pressed;
-
-            if (shift_held && record->event.pressed) {
-                register_code(KC_CAPS);
-                unregister_code(KC_CAPS);
-            }
-            shift_held = record->event.pressed;
-            return true;
-            break;
-        case KC_RSFT:
-            rshift_held = record->event.pressed;
-
-            if (shift_held && record->event.pressed) {
-                register_code(KC_CAPS);
-                unregister_code(KC_CAPS);
-            }
-            shift_held = record->event.pressed;
-            return true;
-            break;
-
-        case KC_Q:
-        case KC_W:
-        case KC_E:
-        case KC_R:
-        case KC_T:
-
-        case KC_A:
-        case KC_S:
-        case KC_D:
-        case KC_F:
-        case KC_G:
-
-        case KC_Z:
-        case KC_X:
-        case KC_C:
-        case KC_V:
-        case KC_B:
-            return !(layer_state_is(_QWERTY) && lshift_held);
-            break;
-
-        case KC_Y:
-        case KC_U:
-        case KC_I:
-        case KC_O:
-        case KC_P:
-
-        case KC_H:
-        case KC_J:
-        case KC_K:
-        case KC_L:
-        case KC_SCLN:
-
-        case KC_N:
-        case KC_M:
-        case KC_COMM:
-        case KC_DOT:
-        case KC_SLSH:
-            return !(layer_state_is(_QWERTY) && rshift_held);
-            break;
-
-        default:
-            return true;
     }
 }
