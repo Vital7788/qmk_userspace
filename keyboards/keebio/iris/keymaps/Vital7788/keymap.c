@@ -34,13 +34,13 @@ enum layers {
 
 #define ALT_ESC LALT(KC_ESC)
 
-const uint16_t PROGMEM tab[] = {KC_PGDN, MT_SPC, COMBO_END};
-const uint16_t PROGMEM num[] = {KC_PGUP, MT_BSPC, COMBO_END};
+const uint16_t PROGMEM tab_r[] = {KC_BRIU, MT_SPC, COMBO_END};
+const uint16_t PROGMEM tab_l[] = {KC_BRID, MT_BSPC, COMBO_END};
 const uint16_t PROGMEM mute[] = {KC_VOLD, KC_VOLU, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(tab, KC_TAB),
-    COMBO(num, KC_TAB),
+    COMBO(tab_r, KC_TAB),
+    COMBO(tab_l, KC_TAB),
     COMBO(mute, KC_MUTE),
 };
 
@@ -68,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_VOLD, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_VOLU,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_BRID,          KC_BRIU, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LGUI, MT_ESC,  MT_BSPC,                   MT_SPC,  MT_ENT,  KC_LALT
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
