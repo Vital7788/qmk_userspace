@@ -60,15 +60,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
+  /*
+        & * { %    ` } # +
+      = ' - ( ^    $ ) _ " :
+      ~ | < [ !    ? ] > @ \
+  */
+
   [_SYMBOLS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, XXXXXXX, KC_ASTR, KC_PLUS, KC_LCBR, KC_PIPE,                            KC_GRV,  KC_RCBR, KC_HASH, KC_PERC, XXXXXXX, _______,
+     _______, XXXXXXX, KC_AMPR, KC_ASTR, KC_LCBR, KC_PERC,                            KC_GRV,  KC_RCBR, KC_HASH, KC_PLUS, XXXXXXX, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_BRID, KC_EQL,  KC_QUOT, KC_MINS, KC_LPRN, KC_CIRC,                            KC_DLR,  KC_RPRN, KC_UNDS, KC_DQUO, KC_COLN, KC_BRIU,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_TILD, KC_EXLM, KC_LT,   KC_LBRC, KC_AMPR, _______,          _______, KC_QUES, KC_RBRC, KC_GT,   KC_AT,   KC_BSLS, _______,
+     _______, KC_TILD, KC_PIPE, KC_LT,   KC_LBRC, KC_EXLM, _______,          _______, KC_QUES, KC_RBRC, KC_GT,   KC_AT,   KC_BSLS, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -316,9 +322,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MT_BSPC:
-            // Immediately select the hold action when another key is pressed.
-            return true;
         case MT_SPC:
+        case MT_ESC:
+        case MT_DEL:
+            // Immediately select the hold action when another key is pressed.
             return true;
         default:
             // Do not select the hold action when another key is pressed.
