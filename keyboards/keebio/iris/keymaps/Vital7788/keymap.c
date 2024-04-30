@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 
-// Layers
 enum layers {
     _QWERTY,
     _GAMING1,
@@ -14,6 +13,13 @@ enum layers {
     _F_KEYS,
     _LAYERS
 };
+
+enum custom_keycodes {
+    ALT_TAB = SAFE_RANGE,
+};
+
+bool is_alt_tab_active = false;
+uint16_t alt_tab_timer = 0;
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
@@ -49,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_ESC,  TL_G(1), TL_G(2), TL_G(3), TL_G(4), XXXXXXX,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_PSCR,
+     ALT_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_PSCR,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_VOLD, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_VOLU,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
@@ -297,6 +303,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
             break;
+        case ALT_TAB:
+            if (record->event.pressed) {
+                if (!is_alt_tab_active) {
+                    is_alt_tab_active = true;
+                    register_code(KC_LALT);
+                }
+                alt_tab_timer = timer_read();
+                register_code(KC_TAB);
+            } else {
+                unregister_code(KC_TAB);
+            }
+            return false;
+            break;
         default:
             return true;
     }
@@ -311,5 +330,14 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         default:
             // Do not select the hold action when another key is pressed.
             return false;
+    }
+}
+
+void matrix_scan_user(void) {
+    if (is_alt_tab_active) {
+        if (timer_elapsed(alt_tab_timer) > 1000) {
+            unregister_code(KC_LALT);
+            is_alt_tab_active = false;
+        }
     }
 }
