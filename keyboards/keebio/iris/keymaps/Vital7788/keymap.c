@@ -12,22 +12,14 @@ enum layers {
     _SYMBOLS,
     _NUMBERS,
     _F_KEYS,
-    _SYSTEM,
     _LAYERS
 };
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
-#define LA_SYS TT(_SYSTEM)
-#define LA_NUM MO(_NUMBERS)
-#define LA_F MO(_F_KEYS)
-// #define MT_TAB LT(_F_KEYS, KC_TAB)
-#define MT_TAB LT(_NUMBERS, KC_TAB)
 #define MT_SPC MT(MOD_LSFT, KC_SPC)
-#define MT_BSPC MT(MOD_LCTL, KC_BSPC)
-#define MT_ESC MT(MOD_LGUI, KC_ESC)
+#define MT_BSPC LT(_NUMBERS, KC_BSPC)
 #define MT_ENT LT(_SYMBOLS, KC_ENT)
-#define MT_DEL MT(MOD_LALT, KC_DEL)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -35,8 +27,14 @@ enum layers {
 #define LA_G2a MO(_GAMING2a)
 #define LA_G2b MO(_GAMING2b)
 
+#define OSM_SFT OSM(MOD_LSFT)
+#define OSM_CTL OSM(MOD_LCTL)
+#define OSM_ALT OSM(MOD_LALT)
+#define OSM_GUI OSM(MOD_LGUI)
+#define OSL_F OSL(_F_KEYS)
+
 const uint16_t PROGMEM thumb_r[] = {KC_PGDN, MT_ENT, COMBO_END};
-const uint16_t PROGMEM thumb_l[] = {KC_PGUP, MT_TAB, COMBO_END};
+const uint16_t PROGMEM thumb_l[] = {KC_PGUP, MT_BSPC, COMBO_END};
 const uint16_t PROGMEM mute[] = {KC_VOLD, KC_VOLU, COMBO_END};
 
 combo_t key_combos[] = {
@@ -57,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    MT_TAB,  MT_SPC,  MT_BSPC,                   MT_ESC,  MT_ENT,  MT_DEL
+                                    KC_TAB,  MT_SPC,  MT_BSPC,                   KC_ESC,  MT_ENT,  KC_DEL
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -85,9 +83,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            KC_PSLS, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, LA_F,    LA_F,    LA_F,    LA_F,    _______,                            KC_PAST, KC_7,    KC_8,    KC_9,    KC_EQL,  _______,
+     _______, _______, _______, OSL_F,   _______, _______,                            KC_PAST, KC_7,    KC_8,    KC_9,    KC_EQL,  _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, KC_NUM,                             KC_PPLS, KC_4,    KC_5,    KC_6,    KC_DOT,  _______,
+     _______, OSM_ALT, OSM_SFT, OSM_GUI, OSM_CTL, KC_NUM,                             KC_PPLS, KC_4,    KC_5,    KC_6,    KC_DOT,  _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______, _______,          _______, KC_PMNS, KC_1,    KC_2,    KC_3,    KC_COMM, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
@@ -104,21 +102,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, _______,                            _______, KC_F4,   KC_F5,   KC_F6,   _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______, _______,          _______, _______, KC_F1,   KC_F2,   KC_F3,   _______, _______,
-  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, _______, _______,                   _______, _______, _______
-                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
-  ),
-
-  [_SYSTEM] = LAYOUT(
-
-  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, XXXXXXX, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX, XXXXXXX, XXXXXXX, KC_MPRV, KC_MNXT, KC_PGUP,                            KC_PSCR, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_DEL,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_MSTP, KC_MPLY, KC_MUTE, KC_VOLD, KC_VOLU, KC_PGDN,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_END,  _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,          _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -300,7 +283,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(2, layer_state_cmp(state, _GAMING2) ||
                                 layer_state_cmp(state, _GAMING3) ||
                                 layer_state_cmp(state, _GAMING4));
-    rgblight_set_layer_state(3, layer_state_cmp(state, _SYSTEM));
     rgblight_set_layer_state(4, layer_state_cmp(state, _LAYERS));
     return state;
 }
@@ -323,6 +305,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MT_ENT:
+        case MT_SPC:
             // Immediately select the hold action when another key is pressed.
             return true;
         default:
