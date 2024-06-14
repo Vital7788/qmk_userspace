@@ -364,27 +364,32 @@ void matrix_scan_user(void) {
     }
 }
 
+// helper function to apply 8-bit mods to the given keycode
+uint16_t apply_mods(uint16_t keycode, uint8_t mods) {
+    // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy:
+    // if left and right handed mods were mixed, they all become right handed.
+    uint8_t mods_5_bit = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
+        // Combine right and left hand mods.
+        | (((mods >> 4) | mods) & 0xf);
+
+    return ((mods_5_bit << 8) | keycode);
+}
+
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-    if ((mods & MOD_MASK_GUI)) {  // Was Gui held?
-        if (mods == (MOD_BIT_LGUI | MOD_BIT_LSHIFT)) {
-            switch (keycode) {
-                case KC_1 ... KC_0:
-                    return G(keycode);
-            }
-        }
-
-        // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy:
-        // if left and right handed mods were mixed, they all become right handed.
-        uint8_t mods_5_bit = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
-            // Combine right and left hand mods.
-            | (((mods >> 4) | mods) & 0xf);
-
+    // If Gui was held and Gui/Shift are the only mods
+    if ((mods & MOD_MASK_GUI) && !(mods & ~(MOD_MASK_SG))) {  // Was Gui held?
         switch (keycode) {
-            case KC_J: return ((mods_5_bit << 8) | KC_K);  // Gui + J reverses to Gui + K.
-            case KC_K: return ((mods_5_bit << 8) | KC_J);
-            case KC_H: return ((mods_5_bit << 8) | KC_L);
-            case KC_L: return ((mods_5_bit << 8) | KC_H);
+            case KC_J: return apply_mods(KC_K, mods);  // Gui + J reverses to Gui + K.
+            case KC_K: return apply_mods(KC_J, mods);
+            case KC_H: return apply_mods(KC_L, mods);
+            case KC_L: return apply_mods(KC_H, mods);
+            case KC_1 ... KC_0: return apply_mods(keycode, mods & ~(MOD_MASK_SHIFT));
         }
+    }
+
+    // Ctrl + R reverses to Ctrl + F
+    if (mods == MOD_BIT_LCTRL && keycode == KC_R) {
+        return C(KC_F);
     }
 
     return KC_TRNS;  // Defer to default definitions.
