@@ -11,6 +11,7 @@ enum layers {
     _SYMBOLS,
     _NUMBERS,
     _F_KEYS,
+    _SYSTEM,
     _LAYERS
 };
 
@@ -26,6 +27,7 @@ uint16_t alt_tab_timer = 0;
 #define MT_SPC MT(MOD_LSFT, KC_SPC)
 #define MT_BSPC LT(_NUMBERS, KC_BSPC)
 #define MT_ENT LT(_SYMBOLS, KC_ENT)
+#define MT_ESC LT(_SYSTEM, KC_ESC)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -39,14 +41,16 @@ uint16_t alt_tab_timer = 0;
 #define OSM_GUI OSM(MOD_LGUI)
 #define OSL_F OSL(_F_KEYS)
 
-const uint16_t PROGMEM thumb_r[] = {KC_PGDN, MT_ENT, COMBO_END};
+const uint16_t PROGMEM thumb_r[] = {KC_PGDN, MT_ESC, COMBO_END};
 const uint16_t PROGMEM thumb_l[] = {KC_PGUP, MT_BSPC, COMBO_END};
 const uint16_t PROGMEM mute[] = {KC_VOLD, KC_VOLU, COMBO_END};
+const uint16_t PROGMEM tab[] = {MT_SPC, MT_ENT, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(thumb_r, KC_HOME),
     COMBO(thumb_l, KC_END),
     COMBO(mute, KC_MUTE),
+    COMBO(tab, KC_TAB),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -55,13 +59,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_ESC,  TL_G(1), TL_G(2), TL_G(3), TL_G(4), XXXXXXX,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     ALT_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_PSCR,
+     ALT_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_VOLD, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_VOLU,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_TAB,  MT_SPC,  MT_BSPC,                   KC_ESC,  MT_ENT,  KC_DEL
+                                    QK_AREP, MT_SPC,  MT_BSPC,                   MT_ESC,  MT_ENT,  QK_REP
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -105,9 +109,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______,                            _______, KC_F7,   KC_F8,   KC_F9,   _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, _______,                            _______, KC_F4,   KC_F5,   KC_F6,   _______, _______,
+     _______, KC_LALT, KC_LSFT, KC_LGUI, KC_LCTL, _______,                            _______, KC_F4,   KC_F5,   KC_F6,   _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______, _______,          _______, _______, KC_F1,   KC_F2,   KC_F3,   _______, _______,
+  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                    _______, _______, _______,                   _______, _______, _______
+                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+  ),
+
+  [_SYSTEM] = LAYOUT(
+
+  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     _______, XXXXXXX, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX,                            XXXXXXX, KC_PSCR, KC_PSCR, XXXXXXX, XXXXXXX, _______,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     _______, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,                            KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, _______,
+  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+     _______, KC_MSTP, KC_MPLY, KC_MPRV, KC_MNXT, XXXXXXX, _______,          _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -321,10 +340,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+/*
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MT_ENT:
         case MT_SPC:
+        case MT_BSPC:
             // Immediately select the hold action when another key is pressed.
             return true;
         default:
@@ -332,6 +353,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
 }
+*/
 
 void matrix_scan_user(void) {
     if (is_alt_tab_active) {
@@ -340,4 +362,30 @@ void matrix_scan_user(void) {
             is_alt_tab_active = false;
         }
     }
+}
+
+uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
+    if ((mods & MOD_MASK_GUI)) {  // Was Gui held?
+        if (mods == (MOD_BIT_LGUI | MOD_BIT_LSHIFT)) {
+            switch (keycode) {
+                case KC_1 ... KC_0:
+                    return G(keycode);
+            }
+        }
+
+        // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy:
+        // if left and right handed mods were mixed, they all become right handed.
+        uint8_t mods_5_bit = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
+            // Combine right and left hand mods.
+            | (((mods >> 4) | mods) & 0xf);
+
+        switch (keycode) {
+            case KC_J: return ((mods_5_bit << 8) | KC_K);  // Gui + J reverses to Gui + K.
+            case KC_K: return ((mods_5_bit << 8) | KC_J);
+            case KC_H: return ((mods_5_bit << 8) | KC_L);
+            case KC_L: return ((mods_5_bit << 8) | KC_H);
+        }
+    }
+
+    return KC_TRNS;  // Defer to default definitions.
 }
