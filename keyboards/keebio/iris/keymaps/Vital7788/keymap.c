@@ -24,8 +24,8 @@ uint16_t alt_tab_timer = 0;
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
-#define MT_SPC MT(MOD_LSFT, KC_SPC)
-#define MT_BSPC LT(_NUMBERS, KC_BSPC)
+#define MT_SPC LT(_NUMBERS, KC_SPC)
+#define MT_BSPC MT(MOD_LSFT, KC_BSPC)
 #define MT_ENT LT(_SYMBOLS, KC_ENT)
 #define MT_ESC LT(_SYSTEM, KC_ESC)
 
@@ -41,16 +41,21 @@ uint16_t alt_tab_timer = 0;
 #define OSM_GUI OSM(MOD_LGUI)
 #define OSL_F OSL(_F_KEYS)
 
+#define NXT_TAB LCTL(KC_PGDN)
+#define PRV_TAB LCTL(KC_PGUP)
+
 const uint16_t PROGMEM thumb_r[] = {KC_PGDN, MT_ESC, COMBO_END};
 const uint16_t PROGMEM thumb_l[] = {KC_PGUP, MT_BSPC, COMBO_END};
-const uint16_t PROGMEM mute[] = {KC_VOLD, KC_VOLU, COMBO_END};
-const uint16_t PROGMEM tab[] = {MT_SPC, MT_ENT, COMBO_END};
+const uint16_t PROGMEM ctrl_tab[] = {MT_SPC, MT_ENT, COMBO_END};
+const uint16_t PROGMEM alt[] = {MT_SPC, MT_ESC, COMBO_END};
+const uint16_t PROGMEM caps[] = {MT_BSPC, MT_ESC, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(thumb_r, KC_HOME),
     COMBO(thumb_l, KC_END),
-    COMBO(mute, KC_MUTE),
-    COMBO(tab, KC_TAB),
+    COMBO(ctrl_tab, MT(MOD_LCTL, KC_TAB)),
+    COMBO(alt, KC_LALT),
+    COMBO(caps, KC_CAPS),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -61,9 +66,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      ALT_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_VOLD, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_VOLU,
+     PRV_TAB, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, NXT_TAB,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
+     KC_CAPS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     QK_AREP, MT_SPC,  MT_BSPC,                   MT_ESC,  MT_ENT,  QK_REP
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -95,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, OSL_F,   _______, _______,                            KC_PAST, KC_7,    KC_8,    KC_9,    KC_EQL,  _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, OSM_ALT, OSM_SFT, OSM_GUI, OSM_CTL, KC_NUM,                             KC_PPLS, KC_4,    KC_5,    KC_6,    KC_DOT,  _______,
+     _______, OSM_ALT, OSM_CTL, OSM_GUI, OSM_SFT, KC_NUM,                             KC_PPLS, KC_4,    KC_5,    KC_6,    KC_DOT,  _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______, _______,          _______, KC_PMNS, KC_1,    KC_2,    KC_3,    KC_COMM, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
@@ -109,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______,                            _______, KC_F7,   KC_F8,   KC_F9,   _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_LALT, KC_LSFT, KC_LGUI, KC_LCTL, _______,                            _______, KC_F4,   KC_F5,   KC_F6,   _______, _______,
+     _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, _______,                            _______, KC_F4,   KC_F5,   KC_F6,   _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______, _______,          _______, _______, KC_F1,   KC_F2,   KC_F3,   _______, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
@@ -393,4 +398,12 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     }
 
     return KC_TRNS;  // Defer to default definitions.
+}
+
+bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+    if (!(*remembered_mods)) {
+        return false;
+    }
+
+    return true;
 }
