@@ -326,7 +326,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code(KC_CAPS);
             }
             return true;
-            break;
+
+        case OSM_GUI:
+        case OSM_SFT:
+        case OSM_CTL:
+        case OSM_ALT:
+            // Register both one shot mods and regular mods when hold is registered
+            // This way pressing 2 one shot mods in quick succession chains them
+            if (record->event.pressed) {
+                // 5 and 8 bit formats are the same here, since we're only dealing with left modifiers
+                add_oneshot_mods((keycode)&0xF);
+                if (record->tap.count == 0) {
+                    register_mods((keycode)&0xF);
+                }
+            } else {
+                if (record->tap.count == 0) {
+                    unregister_mods((keycode)&0xF);
+                }
+            }
+            return false;
+
         case ALT_TAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
@@ -339,7 +358,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_TAB);
             }
             return false;
-            break;
+
         default:
             return true;
     }

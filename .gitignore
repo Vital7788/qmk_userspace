@@ -20,4 +20,4 @@ via*.json
 /keyboards/**/keymaps/via/*
 /keyboards/**/keymaps/vial/*
 
-keymap.plist
+*.plist
