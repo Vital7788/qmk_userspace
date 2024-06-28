@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "process_repeat_key.h"
 
 enum layers {
     _QWERTY,
@@ -27,7 +28,9 @@ uint16_t alt_tab_timer = 0;
 #define MT_SPC LT(_NUMBERS, KC_SPC)
 #define MT_BSPC MT(MOD_LSFT, KC_BSPC)
 #define MT_ENT LT(_SYMBOLS, KC_ENT)
-#define MT_ESC LT(_SYSTEM, KC_ESC)
+#define MT_ESC MT(MOD_RSFT, KC_ESC)
+#define MT_REP LT(_SYSTEM, QK_REP)
+#define MT_AREP LT(_SYSTEM, QK_AREP)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -70,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_CAPS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_PGUP,          KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    QK_AREP, MT_SPC,  MT_BSPC,                   MT_ESC,  MT_ENT,  QK_REP
+                                    MT_AREP, MT_SPC,  MT_BSPC,                   MT_ESC,  MT_ENT,  MT_REP
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -346,6 +349,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        case MT_REP:
+            if (record->tap.count) {
+                process_repeat_key(QK_REP, record);
+                return false;
+            }
+            return true;
+        case MT_AREP:
+            if (record->tap.count) {
+                process_repeat_key(QK_AREP, record);
+                return false;
+            }
+            return true;
+
         case ALT_TAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
@@ -401,13 +417,13 @@ uint16_t apply_mods(uint16_t keycode, uint8_t mods) {
 
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     // If Gui was held and Gui/Shift are the only mods
-    if ((mods & MOD_MASK_GUI) && !(mods & ~(MOD_MASK_SG))) {  // Was Gui held?
+    if ((mods & MOD_MASK_GUI) && !(mods & ~(MOD_MASK_SG))) {
         switch (keycode) {
-            case KC_J: return apply_mods(KC_K, mods);  // Gui + J reverses to Gui + K.
-            case KC_K: return apply_mods(KC_J, mods);
-            case KC_H: return apply_mods(KC_L, mods);
-            case KC_L: return apply_mods(KC_H, mods);
-            case KC_1 ... KC_0: return apply_mods(keycode, mods & ~(MOD_MASK_SHIFT));
+            case KC_J: return G(KC_K);  // Gui + J reverses to Gui + K.
+            case KC_K: return G(KC_J);
+            case KC_H: return G(KC_L);
+            case KC_L: return G(KC_H);
+            case KC_1 ... KC_0: return G(keycode);
         }
     }
 
