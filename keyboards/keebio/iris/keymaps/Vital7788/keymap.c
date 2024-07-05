@@ -13,6 +13,7 @@ enum layers {
     _NUMBERS,
     _F_KEYS,
     _SYSTEM,
+    _QWERTY2,
     _LAYERS
 };
 
@@ -31,6 +32,8 @@ uint16_t alt_tab_timer = 0;
 #define MT_ESC MT(MOD_RSFT, KC_ESC)
 #define MT_REP LT(_SYSTEM, QK_REP)
 #define MT_AREP LT(_SYSTEM, QK_AREP)
+#define NUM_0 LT(_QWERTY2, KC_0)
+#define NUM_SPC LT(_QWERTY2, KC_SPC)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -107,7 +110,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______, _______,          _______, KC_PMNS, KC_1,    KC_2,    KC_3,    KC_COMM, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, _______, _______,                   _______, KC_0,    _______
+                                    _______, _______, _______,                   NUM_SPC, NUM_0,   KC_BSPC
+                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+  ),
+
+  [_QWERTY2] = LAYOUT(
+  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     _______, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, _______,
+  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+     _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    _______,          _______, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
+  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                    _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -362,6 +379,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
+        case NUM_0:
+            if (!record->tap.count) {
+                if (record->event.pressed) {
+                    register_mods(MOD_LCTL);
+                } else {
+                    unregister_mods(MOD_LCTL);
+                }
+            }
+            return true;
+        case NUM_SPC:
+            if (!record->tap.count) {
+                if (record->event.pressed) {
+                    register_mods(MOD_LALT);
+                } else {
+                    unregister_mods(MOD_LALT);
+                }
+            }
+            return true;
+
         case ALT_TAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
@@ -425,11 +461,12 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case KC_L: return G(KC_H);
             case KC_1 ... KC_0: return G(keycode);
         }
-    }
-
-    // Ctrl + R reverses to Ctrl + F
-    if (mods == MOD_BIT_LCTRL && keycode == KC_R) {
-        return C(KC_F);
+    } else if (mods == MOD_BIT_LCTRL) {
+        switch (keycode) {
+            case KC_R: return C(KC_F);
+            case KC_C: return C(KC_V);
+            case KC_V: return C(KC_C);
+        }
     }
 
     return KC_TRNS;  // Defer to default definitions.
