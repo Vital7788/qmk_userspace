@@ -42,7 +42,12 @@ uint16_t alt_tab_timer = 0;
 #define OSM_CTL OSM(MOD_LCTL)
 #define OSM_ALT OSM(MOD_LALT)
 #define OSM_GUI OSM(MOD_LGUI)
-#define OSL_F OSL(_F_KEYS)
+
+// Layer tap key with no practical use because layer 0 is always active
+#define NUM_(x) LT(0, KC_##x)
+#define NUM_EQL LT(0, KC_EQL)
+#define NUM_DOT LT(0, KC_DOT)
+#define NUM_COMM LT(0, KC_COMM)
 
 #define NXT_TAB LCTL(KC_PGDN)
 #define PRV_TAB LCTL(KC_PGUP)
@@ -110,11 +115,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, _______, OSL_F,   _______, _______,                            _______, KC_7,    KC_8,    KC_9,    KC_EQL,  _______,
+     _______, KC_PSLS, KC_PAST, KC_PMNS, KC_PPLS, _______,                            _______, NUM_(4), NUM_(5), NUM_(6), NUM_EQL, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, OSM_ALT, OSM_CTL, OSM_GUI, OSM_SFT, KC_NUM,                             _______, KC_4,    KC_5,    KC_6,    KC_DOT,  _______,
+     _______, OSM_ALT, OSM_CTL, OSM_GUI, OSM_SFT, KC_NUM,                             _______, NUM_(1), NUM_(2), NUM_(3), NUM_DOT, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_PSLS, KC_PAST, KC_PMNS, KC_PPLS, _______, _______,          _______, _______, KC_1,    KC_2,    KC_3,    KC_COMM, _______,
+     _______, _______, _______, _______, _______, _______, _______,          _______, _______, NUM_(7), NUM_(8), NUM_(9), NUM_COMM,_______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   KC_SPC,  KC_0,    KC_BSPC
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -371,6 +376,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
+        case NUM_(1) ... NUM_(9):
+            if (!record->tap.count && record->event.pressed) {
+                tap_code16(KC_F1 - KC_1 + QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
+                return false;
+            }
+            return true;
+        case NUM_EQL:
+            if (!record->tap.count && record->event.pressed) {
+                tap_code16(KC_F11);
+                return false;
+            }
+            return true;
+        case NUM_DOT:
+            if (!record->tap.count && record->event.pressed) {
+                tap_code16(KC_F10);
+                return false;
+            }
+            return true;
+        case NUM_COMM:
+            if (!record->tap.count && record->event.pressed) {
+                tap_code16(KC_F12);
+                return false;
+            }
+            return true;
+
         case ALT_TAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
@@ -433,6 +463,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case KC_H: return G(KC_L);
             case KC_L: return G(KC_H);
             case KC_1 ... KC_0: return G(keycode);
+            case NUM_(1) ... NUM_(9): return G(QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
         }
     } else if (mods == MOD_BIT_LCTRL) {
         switch (keycode) {
