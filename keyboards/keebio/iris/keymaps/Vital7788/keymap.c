@@ -52,7 +52,8 @@ uint16_t alt_tab_timer = 0;
 #define NXT_TAB LCTL(KC_PGDN)
 #define PRV_TAB LCTL(KC_PGUP)
 
-#define CPY_PST TD(TD_COPY_PASTE)
+// #define CPY_PST TD(TD_COPY_PASTE)
+#define CPY_PST LT(0, KC_NO)
 
 const uint16_t PROGMEM tab[] = {MT_SPC, MT_ENT, COMBO_END};
 const uint16_t PROGMEM caps[] = {MT_BSPC, MT_ESC, COMBO_END};
@@ -62,16 +63,6 @@ combo_t key_combos[] = {
     COMBO(tab, KC_TAB),
     COMBO(caps, KC_CAPS),
     COMBO(caps2, KC_CAPS),
-};
-
-// Tap Dance declarations
-enum {
-    TD_COPY_PASTE,
-};
-
-// Tap Dance definitions
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_COPY_PASTE] = ACTION_TAP_DANCE_DOUBLE(LCTL(KC_C), LCTL(KC_V)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -411,6 +402,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 register_code(KC_TAB);
             } else {
                 unregister_code(KC_TAB);
+            }
+            return false;
+
+        case CPY_PST:
+            if (record->tap.count && record->event.pressed) {
+                tap_code16(C(KC_C));
+            } else if (record->event.pressed) {
+                tap_code16(C(KC_V));
             }
             return false;
 
