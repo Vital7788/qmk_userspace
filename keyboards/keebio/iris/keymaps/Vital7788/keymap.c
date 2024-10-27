@@ -418,12 +418,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-/*
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MT_ENT:
         case MT_SPC:
         case MT_BSPC:
+        case MT_ESC:
             // Immediately select the hold action when another key is pressed.
             return true;
         default:
@@ -431,7 +431,6 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
 }
-*/
 
 void matrix_scan_user(void) {
     if (is_alt_tab_active) {
