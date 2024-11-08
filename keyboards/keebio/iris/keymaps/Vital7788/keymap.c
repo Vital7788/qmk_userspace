@@ -25,12 +25,12 @@ uint16_t alt_tab_timer = 0;
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
-#define MT_SPC LT(_NUMBERS, KC_SPC)
-#define MT_BSPC MT(MOD_LCTL, KC_BSPC)
-#define MT_ENT LT(_SYMBOLS, KC_ENT)
-#define MT_ESC MT(MOD_LALT, KC_ESC)
-#define MT_REP LT(_SYSTEM, QK_REP)
-#define MT_AREP LT(_SYSTEM, QK_AREP)
+#define THUMB2 LT(_NUMBERS, KC_SPC)
+#define THUMB3 MT(MOD_LCTL, KC_BSPC)
+#define THUMB5 LT(_SYMBOLS, KC_ENT)
+#define THUMB4 MT(MOD_LALT, KC_ESC)
+#define THUMB6 LT(_SYSTEM, QK_REP)
+#define THUMB1 LT(_SYSTEM, QK_AREP)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -55,8 +55,8 @@ uint16_t alt_tab_timer = 0;
 // #define CPY_PST TD(TD_COPY_PASTE)
 #define CPY_PST LT(0, KC_NO)
 
-const uint16_t PROGMEM tab[] = {MT_SPC, MT_ENT, COMBO_END};
-const uint16_t PROGMEM caps[] = {MT_BSPC, MT_ESC, COMBO_END};
+const uint16_t PROGMEM tab[] = {THUMB2, THUMB5, COMBO_END};
+const uint16_t PROGMEM caps[] = {THUMB3, THUMB4, COMBO_END};
 const uint16_t PROGMEM caps2[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
 combo_t key_combos[] = {
@@ -77,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    CPY_PST,          KC_PSCR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    MT_AREP, MT_SPC,  MT_BSPC,                   MT_ESC,  MT_ENT,  MT_REP
+                                    THUMB1,  THUMB2,  THUMB3,                    THUMB4,  THUMB5,  THUMB6
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -354,13 +354,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case MT_REP:
+        case THUMB6:
             if (record->tap.count) {
                 process_repeat_key(QK_REP, record);
                 return false;
             }
             return true;
-        case MT_AREP:
+        case THUMB1:
             if (record->tap.count) {
                 process_repeat_key(QK_AREP, record);
                 return false;
@@ -420,10 +420,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case MT_ENT:
-        case MT_SPC:
-        case MT_BSPC:
-        case MT_ESC:
+        case THUMB5:
+        case THUMB2:
+        case THUMB3:
+        case THUMB4:
             // Immediately select the hold action when another key is pressed.
             return true;
         default:
