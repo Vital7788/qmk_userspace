@@ -12,7 +12,6 @@ enum layers {
     _NAVIGATION,
     _SYMBOLS,
     _NUMBERS,
-    _F_KEYS,
     _SYSTEM,
     _LAYERS
 };
@@ -26,12 +25,12 @@ uint16_t alt_tab_timer = 0;
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
-#define THUMB1 LT(_NUMBERS, QK_AREP)
+#define THUMB1 MO(_NUMBERS)
 #define THUMB2 MT(MOD_LSFT, KC_SPC)
 #define THUMB3 MT(MOD_LCTL, KC_BSPC)
 #define THUMB4 MT(MOD_LALT, KC_ESC)
 #define THUMB5 LT(_SYMBOLS, KC_ENT)
-#define THUMB6 LT(_SYSTEM, QK_REP)
+#define THUMB6 TT(_NAVIGATION)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -49,6 +48,14 @@ uint16_t alt_tab_timer = 0;
 #define NUM_EQL LT(0, KC_EQL)
 #define NUM_DOT LT(0, KC_DOT)
 #define NUM_COMM LT(0, KC_COMM)
+
+#define NAV_(x) LT(0, 0x0003 + 0x000##x)
+#define NAV_RGHT LT(0, KC_RIGHT)
+#define NAV_LEFT LT(0, KC_LEFT)
+#define NAV_DOWN LT(0, KC_DOWN)
+#define NAV_UP LT(0, KC_UP)
+
+#define OSL_NAV OSL(_NAVIGATION)
 
 #define NXT_TAB LCTL(KC_PGDN)
 #define PRV_TAB LCTL(KC_PGUP)
@@ -70,13 +77,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_QWERTY] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_ESC,  TL_G(1), TL_G(2), TL_G(3), TL_G(4), XXXXXXX,                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
+     KC_ESC,  NAV_(1), NAV_(2), NAV_(3), NAV_(4), NAV_(5),                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      ALT_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     PRV_TAB, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, NXT_TAB,
+     C(KC_C), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_MUTE,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_CAPS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    CPY_PST,          KC_PSCR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
+     C(KC_V), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    OSL_NAV,          KC_PSCR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     THUMB1,  THUMB2,  THUMB3,                    THUMB4,  THUMB5,  THUMB6
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -104,18 +111,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAVIGATION] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+     _______, NAV_(6), NAV_(7), NAV_(8), NAV_(9), NAV_(10),                           _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, _______, G(KC_UP),_______, _______,                            _______, G(KC_4), G(KC_5), G(KC_6), _______, _______,
+     _______, G(KC_Q), G(KC_W), G(KC_E), G(KC_R), G(KC_T),                            G(KC_Y), G(KC_U), G(KC_I), G(KC_O), G(KC_P), _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______,_______,G(KC_LEFT),G(KC_DOWN),G(KC_RIGHT),_______,                       _______, G(KC_1), G(KC_2), G(KC_3), _______, _______,
+     _______, G(KC_A), G(KC_S), G(KC_D), G(KC_F), G(KC_G),                            NAV_LEFT,NAV_DOWN,NAV_UP,  NAV_RGHT,G(KC_SCLN),_______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, _______, _______, _______, _______, _______,          _______, _______, G(KC_7), G(KC_8), G(KC_9), _______, _______,
+     _______, G(KC_Z), G(KC_X), G(KC_C), G(KC_V), G(KC_B), _______,          _______, G(KC_N), G(KC_M),G(KC_COMM),G(KC_DOT),G(KC_SLSH),_______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, _______, _______,                   _______, _______, _______
+                                    _______, _______, _______,                  G(KC_ESC),G(KC_ENT),_______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
-
 
   [_NUMBERS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
@@ -128,20 +134,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      _______, _______, _______, _______, _______, _______, _______,          _______, _______, NUM_(7), NUM_(8), NUM_(9), NUM_COMM,_______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   KC_SPC,  KC_0,    KC_BSPC
-                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
-  ),
-
-  [_F_KEYS] = LAYOUT(
-  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, KC_F10,  KC_F11,  KC_F12,  _______, _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, _______, _______, _______, _______,                            _______, KC_F7,   KC_F8,   KC_F9,   _______, _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, _______,                            _______, KC_F4,   KC_F5,   KC_F6,   _______, _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, _______, _______, _______, _______, _______,          _______, _______, KC_F1,   KC_F2,   KC_F3,   _______, _______,
-  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -336,6 +328,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(2, layer_state_cmp(state, _GAMING2) ||
                                 layer_state_cmp(state, _GAMING3) ||
                                 layer_state_cmp(state, _GAMING4));
+    rgblight_set_layer_state(3, layer_state_cmp(state, _NAVIGATION));
     rgblight_set_layer_state(4, layer_state_cmp(state, _LAYERS));
     return state;
 }
@@ -369,19 +362,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case THUMB6:
-            if (record->tap.count) {
-                process_repeat_key(QK_REP, record);
-                return false;
-            }
-            return true;
-        case THUMB1:
-            if (record->tap.count) {
-                process_repeat_key(QK_AREP, record);
-                return false;
-            }
-            return true;
-
         case NUM_(1) ... NUM_(9):
             if (!record->tap.count && record->event.pressed) {
                 tap_code16(KC_F1 - KC_1 + QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
@@ -406,6 +386,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
             }
             return true;
+
+        case NAV_(1) ... NAV_(10):
+            if (record->event.pressed) {
+                if (record->tap.count) {
+                    tap_code16(LGUI(keycode - NAV_(1) + KC_1));
+                } else {
+                    tap_code16(LSG(keycode - NAV_(1) + KC_1));
+                }
+            }
+            return false;
+
+        case NAV_RGHT ... NAV_DOWN:
+            if (record->event.pressed) {
+                if (record->tap.count) {
+                    tap_code16(LGUI(keycode - NAV_RGHT + KC_RIGHT));
+                } else {
+                    tap_code16(LSG(keycode - NAV_RGHT + KC_RIGHT));
+                }
+            }
+            return false;
 
         case ALT_TAB:
             if (record->event.pressed) {
