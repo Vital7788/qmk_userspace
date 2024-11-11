@@ -50,6 +50,7 @@ uint16_t alt_tab_timer = 0;
 #define NUM_COMM LT(0, KC_COMM)
 
 #define NAV_(x) LT(0, 0x0003 + 0x000##x)
+#define NAV_0 LT(0, 0x000D)
 #define NAV_RGHT LT(0, KC_RIGHT)
 #define NAV_LEFT LT(0, KC_LEFT)
 #define NAV_DOWN LT(0, KC_DOWN)
@@ -111,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAVIGATION] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, NAV_(6), NAV_(7), NAV_(8), NAV_(9), NAV_(10),                           _______, _______, _______, _______, _______, _______,
+     _______, NAV_(6), NAV_(7), NAV_(8), NAV_(9), NAV_0,                              _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      _______, G(KC_Q), G(KC_W), G(KC_E), G(KC_R), G(KC_T),                            G(KC_Y), G(KC_U), G(KC_I), G(KC_O), G(KC_P), _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -387,7 +388,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
-        case NAV_(1) ... NAV_(10):
+        case NAV_(1) ... NAV_0:
             if (record->event.pressed) {
                 if (record->tap.count) {
                     tap_code16(LGUI(keycode - NAV_(1) + KC_1));
