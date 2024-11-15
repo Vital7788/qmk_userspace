@@ -398,7 +398,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case NAV_RGHT ... NAV_DOWN:
+        case NAV_RGHT ... NAV_UP:
             if (record->event.pressed) {
                 if (record->tap.count) {
                     tap_code16(LGUI(keycode - NAV_RGHT + KC_RIGHT));
