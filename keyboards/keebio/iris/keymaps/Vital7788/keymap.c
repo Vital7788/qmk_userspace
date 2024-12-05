@@ -30,7 +30,7 @@ uint16_t alt_tab_timer = 0;
 #define THUMB3 MT(MOD_LCTL, KC_BSPC)
 #define THUMB4 MT(MOD_LALT, KC_ESC)
 #define THUMB5 LT(_SYMBOLS, KC_ENT)
-#define THUMB6 TT(_NAVIGATION)
+#define THUMB6 MO(_SYSTEM)
 
 #define TL_BASE TO(_QWERTY)
 
