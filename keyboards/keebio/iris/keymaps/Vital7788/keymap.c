@@ -284,6 +284,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 };
 
+#ifdef KEYBOARD_keebio_iris_rev4
 const rgblight_segment_t PROGMEM swap_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 12, HSV_WHITE}       // Light 12 LEDs in white, starting with LED 0
 );
@@ -333,6 +334,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(4, layer_state_cmp(state, _LAYERS));
     return state;
 }
+#endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
