@@ -25,12 +25,12 @@ uint16_t alt_tab_timer = 0;
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
-#define THUMB1 MO(_NUMBERS)
+#define THUMB1 MT(MOD_LALT, KC_TAB)
 #define THUMB2 MT(MOD_LSFT, KC_SPC)
-#define THUMB3 MT(MOD_LCTL, KC_BSPC)
-#define THUMB4 MT(MOD_LALT, KC_ESC)
+#define THUMB3 LT(_NUMBERS, KC_BSPC)
+#define THUMB4 MT(MOD_LCTL, KC_ESC)
 #define THUMB5 LT(_SYMBOLS, KC_ENT)
-#define THUMB6 LT(_SYSTEM, KC_LGUI)
+#define THUMB6 LT(_SYSTEM, KC_TAB)
 
 #define TL_BASE TO(_QWERTY)
 
@@ -57,7 +57,7 @@ uint16_t alt_tab_timer = 0;
 #define NAV_J LT(0, KC_J)
 #define NAV_K LT(0, KC_K)
 
-#define OSL_NAV OSL(_NAVIGATION)
+#define NAV LT(_NAVIGATION, KC_LGUI)
 
 #define NXT_TAB LCTL(KC_PGDN)
 #define PRV_TAB LCTL(KC_PGUP)
@@ -65,12 +65,16 @@ uint16_t alt_tab_timer = 0;
 // #define CPY_PST TD(TD_COPY_PASTE)
 #define CPY_PST LT(0, KC_NO)
 
+#define COPY LCTL(KC_INS)
+#define PASTE LSFT(KC_INS)
+
 const uint16_t PROGMEM tab[] = {THUMB2, THUMB5, COMBO_END};
 const uint16_t PROGMEM caps[] = {THUMB3, THUMB4, COMBO_END};
 const uint16_t PROGMEM caps2[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(tab, KC_TAB),
+    // COMBO(tab, KC_TAB),
+    COMBO(tab, KC_NO),
     COMBO(caps, KC_CAPS),
     COMBO(caps2, KC_CAPS),
 };
@@ -81,11 +85,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_ESC,  NAV_(1), NAV_(2), NAV_(3), NAV_(4), NAV_(5),                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     ALT_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
+     PASTE,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     NAV_(6), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, NAV_(8),
+     COPY,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, KC_PSCR,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     NAV_(7), KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    OSL_NAV,          KC_PSCR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, NAV_(9),
+     XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              KC_TAB,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     THUMB1,  THUMB2,  THUMB3,                    THUMB4,  THUMB5,  THUMB6
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -107,7 +111,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, KC_EXLM, KC_LT,   KC_ASTR, KC_UNDS, KC_TILD, _______,          _______, KC_AT,   KC_DLR,  KC_CIRC, KC_GT,   KC_BSLS, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, _______, _______,                   _______, _______, _______
+                                    _______, KC_TAB,  _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
