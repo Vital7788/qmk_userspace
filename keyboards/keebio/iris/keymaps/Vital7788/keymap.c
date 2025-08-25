@@ -16,13 +16,6 @@ enum layers {
     _LAYERS
 };
 
-enum custom_keycodes {
-    ALT_TAB = SAFE_RANGE,
-};
-
-bool is_alt_tab_active = false;
-uint16_t alt_tab_timer = 0;
-
 // Layer keys
 #define LAYERS MO(_LAYERS)
 #define THUMB1 MT(MOD_LALT, KC_TAB)
@@ -52,12 +45,6 @@ uint16_t alt_tab_timer = 0;
 #define NAV MO(_NAVIGATION)
 // Define a series of layer tap keys to use for tap-hold for shifted keys on the navigation layer
 #define N(x) LT(_NAVIGATION, x)
-
-#define NXT_TAB LCTL(KC_PGDN)
-#define PRV_TAB LCTL(KC_PGUP)
-
-// #define CPY_PST TD(TD_COPY_PASTE)
-#define CPY_PST LT(0, KC_NO)
 
 #define COPY LCTL(KC_INS)
 #define PASTE LSFT(KC_INS)
@@ -337,14 +324,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case KC_LSFT:
-        case KC_RSFT:
-            // Detect the activation of both Shifts
-            if ((get_mods() & MOD_MASK_SHIFT) == MOD_MASK_SHIFT) {
-                tap_code(KC_CAPS);
-            }
-            return true;
-
         case OSM_GUI:
         case OSM_SFT:
         case OSM_CTL:
@@ -399,27 +378,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
-        case ALT_TAB:
-            if (record->event.pressed) {
-                if (!is_alt_tab_active) {
-                    is_alt_tab_active = true;
-                    register_code(KC_LALT);
-                }
-                alt_tab_timer = timer_read();
-                register_code(KC_TAB);
-            } else {
-                unregister_code(KC_TAB);
-            }
-            return false;
-
-        case CPY_PST:
-            if (record->tap.count && record->event.pressed) {
-                tap_code16(C(KC_C));
-            } else if (record->event.pressed) {
-                tap_code16(C(KC_V));
-            }
-            return false;
-
         default:
             return true;
     }
@@ -437,54 +395,4 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
             // Do not select the hold action when another key is pressed.
             return false;
     }
-}
-
-void matrix_scan_user(void) {
-    if (is_alt_tab_active) {
-        if (timer_elapsed(alt_tab_timer) > 1000) {
-            unregister_code(KC_LALT);
-            is_alt_tab_active = false;
-        }
-    }
-}
-
-// helper function to apply 8-bit mods to the given keycode
-uint16_t apply_mods(uint16_t keycode, uint8_t mods) {
-    // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy:
-    // if left and right handed mods were mixed, they all become right handed.
-    uint8_t mods_5_bit = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
-        // Combine right and left hand mods.
-        | (((mods >> 4) | mods) & 0xf);
-
-    return ((mods_5_bit << 8) | keycode);
-}
-
-uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-    // If Gui was held and Gui/Shift are the only mods
-    if ((mods & MOD_MASK_GUI) && !(mods & ~(MOD_MASK_SG))) {
-        switch (keycode) {
-            case KC_J: return G(KC_K);  // Gui + J reverses to Gui + K.
-            case KC_K: return G(KC_J);
-            case KC_H: return G(KC_L);
-            case KC_L: return G(KC_H);
-            case KC_1 ... KC_0: return G(keycode);
-            case NUM_(1) ... NUM_(9): return G(QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
-        }
-    } else if (mods == MOD_BIT_LCTRL) {
-        switch (keycode) {
-            case KC_R: return C(KC_F);
-            case KC_C: return C(KC_V);
-            case KC_V: return C(KC_C);
-        }
-    }
-
-    return KC_TRNS;  // Defer to default definitions.
-}
-
-bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
-    if (!(*remembered_mods)) {
-        return false;
-    }
-
-    return true;
 }
