@@ -45,19 +45,13 @@ uint16_t alt_tab_timer = 0;
 
 // Layer tap key with no practical use because layer 0 is always active
 #define NUM_(x) LT(0, KC_##x)
-#define NUM_EQL LT(0, KC_EQL)
-#define NUM_DOT LT(0, KC_DOT)
-#define NUM_COMM LT(0, KC_COMM)
 
 // Random unused range since regular number range is already being used by NUM_(x) macro
 #define NAV_(x) LT(0, 0x0058 + 0x000##x)
-#define NAV_0 LT(0, 0x0062)
-#define NAV_L LT(0, KC_L)
-#define NAV_H LT(0, KC_H)
-#define NAV_J LT(0, KC_J)
-#define NAV_K LT(0, KC_K)
 
-#define NAV LT(_NAVIGATION, KC_LGUI)
+#define NAV MO(_NAVIGATION)
+// Define a series of layer tap keys to use for tap-hold for shifted keys on the navigation layer
+#define N(x) LT(_NAVIGATION, x)
 
 #define NXT_TAB LCTL(KC_PGDN)
 #define PRV_TAB LCTL(KC_PGUP)
@@ -117,15 +111,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAVIGATION] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, NAV_(6), NAV_(7), NAV_(8), NAV_(9), NAV_0,                            G(KC_LEFT),G(KC_DOWN),G(KC_UP),G(KC_RGHT),_______,_______,
+    N(KC_ESC),N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0),                         N(KC_LEFT),N(KC_DOWN),N(KC_UP),N(KC_RGHT),N(KC_INS),_______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, G(KC_Q), G(KC_W), G(KC_E), G(KC_R), G(KC_T),                            G(KC_Y), G(KC_U), G(KC_I), G(KC_O), G(KC_P), _______,
+     KC_NO,   N(KC_Q), N(KC_W), N(KC_E), N(KC_R), N(KC_T),                            N(KC_Y), N(KC_U), N(KC_I), N(KC_O), N(KC_P), N(KC_DEL),
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, G(KC_A), G(KC_S), G(KC_D), G(KC_F), G(KC_G),                            NAV_H,   NAV_J,   NAV_K,   NAV_L,  G(KC_SCLN),_______,
+     KC_NO,   N(KC_A), N(KC_S), N(KC_D), N(KC_F), N(KC_G),                            N(KC_H), N(KC_J), N(KC_K), N(KC_L),N(KC_SCLN),N(KC_PSCR),
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, G(KC_Z), G(KC_X), G(KC_C), G(KC_V), G(KC_B), _______,          _______, G(KC_N), G(KC_M),G(KC_COMM),G(KC_DOT),G(KC_SLSH),_______,
+     KC_NO,   N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B),  _______,        N(KC_TAB),N(KC_N), N(KC_M),N(KC_COMM),N(KC_DOT),N(KC_SLSH),KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, _______, _______,                  G(KC_ESC),G(KC_ENT),_______
+                                    _______,N(KC_SPC),N(KC_BSPC),               N(KC_ESC),N(KC_ENT),_______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -376,26 +370,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
             }
             return true;
-        case NUM_EQL:
-            if (!record->tap.count && record->event.pressed) {
-                tap_code16(KC_F11);
-                return false;
-            }
-            return true;
-        case NUM_DOT:
-            if (!record->tap.count && record->event.pressed) {
-                tap_code16(KC_F10);
-                return false;
-            }
-            return true;
-        case NUM_COMM:
-            if (!record->tap.count && record->event.pressed) {
-                tap_code16(KC_F12);
-                return false;
-            }
-            return true;
 
-        case NAV_(1) ... NAV_0:
+        case NAV_(1) ... NAV_(9):
             if (record->event.pressed) {
                 if (record->tap.count) {
                     tap_code16(LGUI(keycode - NAV_(1) + KC_1));
@@ -405,42 +381,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case NAV_L:
+        case N(KC_A) ... N(KC_UP):
             if (record->event.pressed) {
                 if (record->tap.count) {
-                    tap_code16(LGUI(KC_L));
+                    tap_code16(keycode - N(KC_A) + KC_A);
                 } else {
-                    tap_code16(LSG(KC_L));
+                    tap_code16(LSFT(keycode - N(KC_A) + KC_A));
                 }
             }
             return false;
-        case NAV_H:
+
+        case NAV:
             if (record->event.pressed) {
-                if (record->tap.count) {
-                    tap_code16(LGUI(KC_H));
-                } else {
-                    tap_code16(LSG(KC_H));
-                }
+                register_code(KC_LGUI);
+            } else {
+                unregister_code(KC_LGUI);
             }
-            return false;
-        case NAV_J:
-            if (record->event.pressed) {
-                if (record->tap.count) {
-                    tap_code16(LGUI(KC_J));
-                } else {
-                    tap_code16(LSG(KC_J));
-                }
-            }
-            return false;
-        case NAV_K:
-            if (record->event.pressed) {
-                if (record->tap.count) {
-                    tap_code16(LGUI(KC_K));
-                } else {
-                    tap_code16(LSG(KC_K));
-                }
-            }
-            return false;
+            return true;
 
         case ALT_TAB:
             if (record->event.pressed) {
