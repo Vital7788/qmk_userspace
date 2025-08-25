@@ -345,7 +345,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case NUM_(1) ... NUM_(9):
             if (!record->tap.count && record->event.pressed) {
-                tap_code16(KC_F1 - KC_1 + QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
+                tap_code16(keycode - NUM_(1) + KC_F1);
                 return false;
             }
             return true;
