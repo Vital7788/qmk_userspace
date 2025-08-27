@@ -320,6 +320,35 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 #endif
 
+#ifdef KEYBOARD_keebio_iris_rev8
+
+/*
+ * Use this to reset eeprom rgb matrix settings.
+void keyboard_post_init_user(void) {
+    rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv(HSV_OFF);
+    rgb_matrix_set_speed(127);
+}
+*/
+
+bool rgb_matrix_indicators_user(void) {
+    switch(get_highest_layer(layer_state|default_layer_state)) {
+        case _LAYERS:
+            rgb_matrix_sethsv_noeeprom(HSV_WHITE);
+            break;
+        case _GAMING1:
+            rgb_matrix_sethsv_noeeprom(HSV_ORANGE);
+            break;
+        case _GAMING2 ... _GAMING4:
+            rgb_matrix_sethsv_noeeprom(HSV_SPRINGGREEN);
+            break;
+        default:
+            rgb_matrix_sethsv_noeeprom(HSV_OFF);
+    }
+    return false;
+}
+#endif
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case OSM_GUI:
