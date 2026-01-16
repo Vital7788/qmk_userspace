@@ -1,5 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "process_repeat_key.h"
 
 enum layers {
     _QWERTY,
@@ -18,12 +17,12 @@ enum layers {
 
 // Layer keys
 #define LAYERS MO(_LAYERS)
-#define THUMB1 MT(MOD_LALT, KC_TAB)
+#define THUMB1 MO(_SYSTEM)
 #define THUMB2 MT(MOD_LSFT, KC_SPC)
 #define THUMB3 LT(_NUMBERS, KC_BSPC)
 #define THUMB4 MT(MOD_LCTL, KC_ESC)
 #define THUMB5 LT(_SYMBOLS, KC_ENT)
-#define THUMB6 LT(_SYSTEM, KC_TAB)
+#define THUMB6 KC_LALT
 
 #define TL_BASE TO(_QWERTY)
 
@@ -49,15 +48,10 @@ enum layers {
 #define COPY LCTL(KC_INS)
 #define PASTE LSFT(KC_INS)
 
-const uint16_t PROGMEM tab[] = {THUMB2, THUMB5, COMBO_END};
-const uint16_t PROGMEM caps[] = {THUMB3, THUMB4, COMBO_END};
-const uint16_t PROGMEM caps2[] = {KC_LSFT, KC_RSFT, COMBO_END};
+const uint16_t PROGMEM caps[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
 combo_t key_combos[] = {
-    // COMBO(tab, KC_TAB),
-    COMBO(tab, KC_NO),
     COMBO(caps, KC_CAPS),
-    COMBO(caps2, KC_CAPS),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
