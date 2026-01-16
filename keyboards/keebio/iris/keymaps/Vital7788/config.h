@@ -10,10 +10,13 @@
 // #define QUICK_TAP_TERM 100
 
 #define SPLIT_LAYER_STATE_ENABLE
+#define SPLIT_LED_STATE_ENABLE
 
+#ifdef KEYBOARD_keebio_iris_rev4
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
 #define RGBLIGHT_SLEEP
+#endif
 
 /*
 #undef RGBLED_NUM

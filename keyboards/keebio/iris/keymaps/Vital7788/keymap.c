@@ -315,7 +315,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #endif
 
 #ifdef KEYBOARD_keebio_iris_rev8
-
 /*
  * Use this to reset eeprom rgb matrix settings.
 void keyboard_post_init_user(void) {
@@ -325,19 +324,48 @@ void keyboard_post_init_user(void) {
 }
 */
 
-bool rgb_matrix_indicators_user(void) {
+void rgb_matrix_gaming_indicators(uint8_t led_min, uint8_t led_max, rgb_t rgb, int length, const int indices[]) {
+    const rgb_t springgreen = {RGB_SPRINGGREEN};
+    rgb_matrix_sethsv_noeeprom(HSV_OFF);
+    RGB_MATRIX_INDICATOR_SET_COLOR(34, springgreen.r, springgreen.g, springgreen.b);
+    for (int i = 0; i < length; i++) {
+        RGB_MATRIX_INDICATOR_SET_COLOR(indices[i], rgb.r, rgb.g, rgb.b);
+    }
+}
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    // check g_led_config.matrix_co for led positions
+    // not sure if this changes. if it does, use lookups instead of hardcoded values
+    const int left_wasd[] = {11, 17, 18, 19};
+    const int right_wasd[] = {45, 51, 52, 53};
+    const int caps_index = 15;
+    const rgb_t red = {RGB_RED};
+    const rgb_t blue = {RGB_BLUE};
+    const rgb_t orange = {RGB_ORANGE};
+    const rgb_t springgreen = {RGB_SPRINGGREEN};
+
     switch(get_highest_layer(layer_state|default_layer_state)) {
         case _LAYERS:
             rgb_matrix_sethsv_noeeprom(HSV_WHITE);
             break;
         case _GAMING1:
-            rgb_matrix_sethsv_noeeprom(HSV_ORANGE);
+            rgb_matrix_sethsv_noeeprom(HSV_OFF);
+            RGB_MATRIX_INDICATOR_SET_COLOR(34, springgreen.r, springgreen.g, springgreen.b);
             break;
-        case _GAMING2 ... _GAMING4:
-            rgb_matrix_sethsv_noeeprom(HSV_SPRINGGREEN);
+        case _GAMING2 ... _GAMING2b:
+            rgb_matrix_gaming_indicators(led_min, led_max, red, 4, left_wasd);
+            break;
+        case _GAMING3:
+            rgb_matrix_gaming_indicators(led_min, led_max, orange, 4, left_wasd);
+            break;
+        case _GAMING4:
+            rgb_matrix_gaming_indicators(led_min, led_max, orange, 4, right_wasd);
             break;
         default:
             rgb_matrix_sethsv_noeeprom(HSV_OFF);
+            if (host_keyboard_led_state().caps_lock) {
+                RGB_MATRIX_INDICATOR_SET_COLOR(caps_index, blue.r, blue.g, blue.b);
+            }
     }
     return false;
 }
