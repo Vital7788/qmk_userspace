@@ -47,6 +47,7 @@ enum layers {
 
 #define COPY LCTL(KC_INS)
 #define PASTE LSFT(KC_INS)
+#define C_ENTER LCTL(KC_ENTER)
 
 const uint16_t PROGMEM caps[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
@@ -62,9 +63,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      PASTE,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     COPY,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, KC_PSCR,
+     COPY,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, C_ENTER,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              KC_TAB,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
+     KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              KC_PSCR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     THUMB1,  THUMB2,  THUMB3,                    THUMB4,  THUMB5,  THUMB6
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -96,9 +97,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_NO,   N(KC_Q), N(KC_W), N(KC_E), N(KC_R), N(KC_T),                            N(KC_Y), N(KC_U), N(KC_I), N(KC_O), N(KC_P), N(KC_DEL),
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_NO,   N(KC_A), N(KC_S), N(KC_D), N(KC_F), N(KC_G),                            N(KC_H), N(KC_J), N(KC_K), N(KC_L),N(KC_SCLN),N(KC_PSCR),
+     KC_NO,   N(KC_A), N(KC_S), N(KC_D), N(KC_F), N(KC_G),                            N(KC_H), N(KC_J), N(KC_K), N(KC_L),N(KC_SCLN),N(KC_ENT),
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_NO,   N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B),  _______,        N(KC_TAB),N(KC_N), N(KC_M),N(KC_COMM),N(KC_DOT),N(KC_SLSH),KC_CAPS,
+     KC_NO,   N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B),  _______,       N(KC_PSCR),N(KC_N), N(KC_M),N(KC_COMM),N(KC_DOT),N(KC_SLSH),KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______,N(KC_SPC),N(KC_BSPC),               N(KC_ESC),N(KC_ENT),_______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -434,14 +435,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case THUMB5:
         case THUMB2:
         case THUMB3:
         case THUMB4:
+        case THUMB5:
             // Immediately select the hold action when another key is pressed.
             return true;
         default:
             // Do not select the hold action when another key is pressed.
             return false;
+    }
+}
+
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case THUMB2:
+            return 0;
+        default:
+            return QUICK_TAP_TERM;
     }
 }
