@@ -9,6 +9,7 @@ enum layers {
     _GAMING3,
     _GAMING4,
     _NAVIGATION,
+    _NAVIGATION2,
     _SYMBOLS,
     _NUMBERS,
     _SYSTEM,
@@ -42,12 +43,16 @@ enum layers {
 #define NAV_(x) LT(0, 0x0058 + 0x000##x)
 
 #define NAV MO(_NAVIGATION)
+#define NAV2 MO(_NAVIGATION2)
 // Define a series of layer tap keys to use for tap-hold for shifted keys on the navigation layer
 #define N(x) LT(_NAVIGATION, x)
+// Use a different range for N(x) with ctrl as an additional modifier
+#define NC(x) LT(_NAVIGATION, 0x0053 + x)
+// Use a different range for N(x) with alt as an additional modifier
+#define NA(x) LT(_NAVIGATION, 0x00A2 + x)
 
 #define COPY LCTL(KC_INS)
 #define PASTE LSFT(KC_INS)
-#define C_ENTER LCTL(KC_ENTER)
 
 const uint16_t PROGMEM caps[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
@@ -63,9 +68,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      PASTE,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     COPY,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, C_ENTER,
+     COPY,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, KC_PSCR,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              KC_PSCR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
+     KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              NAV2,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     THUMB1,  THUMB2,  THUMB3,                    THUMB4,  THUMB5,  THUMB6
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -79,27 +84,53 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_SYMBOLS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+     OSM_GUI, NAV_(6), NAV_(7), NAV_(8), NAV_(9), NAV_(0),                            _______, _______, _______, _______, _______, OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, XXXXXXX, KC_PLUS, KC_LPRN, KC_RPRN, KC_GRV,                             KC_HASH, KC_RBRC, KC_LBRC, KC_PERC, XXXXXXX, _______,
+     OSM_SFT, XXXXXXX, KC_PLUS, KC_LPRN, KC_RPRN, KC_GRV,                             KC_HASH, KC_RBRC, KC_LBRC, KC_PERC, XXXXXXX, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_QUES, KC_QUOT, KC_EQL,  KC_MINS, KC_PIPE,                            KC_AMPR, KC_RCBR, KC_LCBR, KC_DQUO, KC_SCLN, _______,
+     OSM_CTL, KC_QUES, KC_QUOT, KC_EQL,  KC_MINS, KC_PIPE,                            KC_AMPR, KC_RCBR, KC_LCBR, KC_DQUO, KC_SCLN, OSM_CTL,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_EXLM, KC_LT,   KC_ASTR, KC_UNDS, KC_TILD, _______,          _______, KC_AT,   KC_DLR,  KC_CIRC, KC_GT,   KC_BSLS, _______,
+     OSM_ALT, KC_EXLM, KC_LT,   KC_ASTR, KC_UNDS, KC_TILD, _______,          _______, KC_AT,   KC_DLR,  KC_CIRC, KC_GT,   KC_BSLS, OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, KC_TAB,  _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
+  #define N_LEFT N(KC_LEFT)
+  #define N_DOWN N(KC_DOWN)
+  #define N_UP N(KC_UP)
+  #define N_RGHT N(KC_RGHT)
+  #define N_SCLN N(KC_SCLN)
+  #define N_COMM N(KC_COMM)
+  #define N_DOT N(KC_DOT)
+  #define N_SLSH N(KC_SLSH)
   [_NAVIGATION] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-    N(KC_ESC),N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0),                         N(KC_LEFT),N(KC_DOWN),N(KC_UP),N(KC_RGHT),N(KC_INS),_______,
+     OSM_GUI, N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0),                            N_LEFT,  N_DOWN,  N_UP,    N_RGHT,  _______, OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_NO,   N(KC_Q), N(KC_W), N(KC_E), N(KC_R), N(KC_T),                            N(KC_Y), N(KC_U), N(KC_I), N(KC_O), N(KC_P), N(KC_DEL),
+     OSM_SFT, N(KC_Q), N(KC_W), N(KC_E), N(KC_R), N(KC_T),                            N(KC_Y), N(KC_U), N(KC_I), N(KC_O), N(KC_P), OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_NO,   N(KC_A), N(KC_S), N(KC_D), N(KC_F), N(KC_G),                            N(KC_H), N(KC_J), N(KC_K), N(KC_L),N(KC_SCLN),N(KC_ENT),
+     OSM_CTL, N(KC_A), N(KC_S), N(KC_D), N(KC_F), N(KC_G),                            N(KC_H), N(KC_J), N(KC_K), N(KC_L), N_SCLN,  OSM_CTL,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_NO,   N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B),  _______,       N(KC_PSCR),N(KC_N), N(KC_M),N(KC_COMM),N(KC_DOT),N(KC_SLSH),KC_CAPS,
+     OSM_ALT, N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B), _______,          _______, N(KC_N), N(KC_M), N_COMM,  N_DOT,   N_SLSH,  OSM_ALT,
+  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                    _______,N(KC_SPC),N(KC_BSPC),               N(KC_ESC),N(KC_ENT),_______
+                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+  ),
+
+  #define N_HOME N(KC_HOME)
+  #define N_END N(KC_END)
+  #define N_PGDN N(KC_PGDN)
+  #define N_PGUP N(KC_PGUP)
+ [_NAVIGATION2] = LAYOUT(
+  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+     OSM_GUI, NA(KC_1),NA(KC_2),NA(KC_3),NA(KC_4),NA(KC_5),                           NA(KC_6),NA(KC_7),NA(KC_8),NA(KC_9),NA(KC_0),OSM_GUI,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     OSM_SFT, NC(KC_1),NC(KC_2),NC(KC_3),NC(KC_4),NC(KC_5),                           NC(KC_6),NC(KC_7),NC(KC_8),NC(KC_9),NC(KC_0),OSM_SFT,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     OSM_CTL, N(KC_1), N(KC_2), N(KC_3), N(KC_4), N(KC_5),                            N_LEFT,  N_DOWN,  N_UP,    N_RGHT,  _______, OSM_CTL,
+  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+     OSM_ALT, N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0), _______,          _______, N_HOME,  N_PGDN,  N_PGUP,  N_END,   _______, OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______,N(KC_SPC),N(KC_BSPC),               N(KC_ESC),N(KC_ENT),_______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -107,13 +138,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NUMBERS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, KC_F10,  KC_F11,  KC_F12,  _______, _______,
+     OSM_GUI, _______, _______, _______, _______, _______,                            _______, KC_F10,  KC_F11,  KC_F12,  _______, OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_PSLS, KC_PAST, KC_PMNS, KC_PPLS, _______,                            _______, NUM_(7), NUM_(8), NUM_(9), _______, _______,
+     OSM_SFT, KC_PSLS, KC_PAST, KC_PMNS, KC_PPLS, _______,                            _______, NUM_(7), NUM_(8), NUM_(9), _______, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, OSM_ALT, OSM_CTL, OSM_SFT, OSM_GUI, KC_NUM,                             _______, NUM_(4), NUM_(5), NUM_(6), _______, _______,
+     OSM_CTL, OSM_GUI, OSM_ALT, OSM_CTL, OSM_SFT, KC_NUM,                             _______, NUM_(4), NUM_(5), NUM_(6), _______, OSM_CTL,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, KC_EQL,  KC_COMM, KC_DOT,  _______, _______,          _______, _______, NUM_(1), NUM_(2), NUM_(3), _______, _______,
+     OSM_ALT, _______, KC_EQL,  KC_COMM, KC_DOT,  _______, _______,          _______, _______, NUM_(1), NUM_(2), NUM_(3), _______, OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   KC_SPC,  KC_0,    KC_BSPC
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -122,13 +153,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_SYSTEM] = LAYOUT(
 
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+     OSM_GUI, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, XXXXXXX, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX,                            XXXXXXX, KC_PSCR, KC_PSCR, XXXXXXX, XXXXXXX, _______,
+     OSM_SFT, XXXXXXX, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX,                            XXXXXXX, KC_PSCR, KC_PSCR, XXXXXXX, XXXXXXX, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,                            KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, _______,
+     OSM_CTL, XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,                            KC_HOME, KC_PGDN, KC_PGUP, KC_END,  XXXXXXX, OSM_CTL,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, KC_MSTP, KC_MPLY, KC_MPRV, KC_MNXT, XXXXXXX, _______,          _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+     OSM_ALT, KC_MSTP, KC_MPLY, KC_MPRV, KC_MNXT, XXXXXXX, _______,          _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -420,7 +451,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
+        case NC(KC_A) ... NC(KC_UP):
+            if (record->event.pressed) {
+                if (record->tap.count) {
+                    tap_code16(LCTL(keycode - NC(KC_A) + KC_A));
+                } else {
+                    tap_code16(LCS(keycode - NC(KC_A) + KC_A));
+                }
+            }
+            return false;
+
+        case NA(KC_A) ... NA(KC_UP):
+            if (record->event.pressed) {
+                if (record->tap.count) {
+                    tap_code16(LALT(keycode - NA(KC_A) + KC_A));
+                } else {
+                    tap_code16(LSA(keycode - NA(KC_A) + KC_A));
+                }
+            }
+            return false;
+
         case NAV:
+        case NAV2:
             if (record->event.pressed) {
                 register_code(KC_LGUI);
             } else {
