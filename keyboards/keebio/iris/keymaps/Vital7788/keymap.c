@@ -16,43 +16,10 @@ enum layers {
     _LAYERS
 };
 
-// Layer keys
-#define LAYERS MO(_LAYERS)
-#define THUMB1 MO(_SYSTEM)
-#define THUMB2 MT(MOD_LSFT, KC_SPC)
-#define THUMB3 LT(_NUMBERS, KC_BSPC)
-#define THUMB4 MT(MOD_LCTL, KC_ESC)
-#define THUMB5 LT(_SYMBOLS, KC_ENT)
-#define THUMB6 KC_LALT
-
-#define TL_BASE TO(_QWERTY)
-
-#define TL_G(x) TG(_GAMING##x)
-#define LA_G2a MO(_GAMING2a)
-#define LA_G2b MO(_GAMING2b)
-
 #define OSM_SFT OSM(MOD_LSFT)
 #define OSM_CTL OSM(MOD_LCTL)
 #define OSM_ALT OSM(MOD_LALT)
 #define OSM_GUI OSM(MOD_LGUI)
-
-// Layer tap key with no practical use because layer 0 is always active
-#define NUM_(x) LT(0, KC_##x)
-
-// Random unused range since regular number range is already being used by NUM_(x) macro
-#define NAV_(x) LT(0, 0x0058 + 0x000##x)
-
-#define NAV MO(_NAVIGATION)
-#define NAV2 MO(_NAVIGATION2)
-// Define a series of layer tap keys to use for tap-hold for shifted keys on the navigation layer
-#define N(x) LT(_NAVIGATION, x)
-// Use a different range for N(x) with ctrl as an additional modifier
-#define NC(x) LT(_NAVIGATION, 0x0053 + x)
-// Use a different range for N(x) with alt as an additional modifier
-#define NA(x) LT(_NAVIGATION, 0x00A2 + x)
-
-#define COPY LCTL(KC_INS)
-#define PASTE LSFT(KC_INS)
 
 const uint16_t PROGMEM caps[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
@@ -61,6 +28,22 @@ combo_t key_combos[] = {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+  #define LAYERS MO(_LAYERS)
+  #define THUMB1 MT(_SYSTEM, KC_TAB)
+  #define THUMB2 MT(MOD_LSFT, KC_SPC)
+  #define THUMB3 LT(_NUMBERS, KC_BSPC)
+  #define THUMB4 MT(MOD_LCTL, KC_ESC)
+  #define THUMB5 LT(_SYMBOLS, KC_ENT)
+  #define THUMB6 MT(MOD_LALT, KC_TAB)
+  #define NAV MO(_NAVIGATION)
+  #define NAV2 MO(_NAVIGATION2)
+
+  #define COPY LCTL(KC_INS)
+  #define PASTE LSFT(KC_INS)
+
+  // Random unused range since regular number range is already being used by NUM_(x) macro
+  #define NAV_(x) LT(0, 0x0058 + 0x000##x)
 
   [_QWERTY] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
@@ -104,6 +87,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   #define N_COMM N(KC_COMM)
   #define N_DOT N(KC_DOT)
   #define N_SLSH N(KC_SLSH)
+
+  // Define a series of layer tap keys to use for tap-hold for shifted keys on the navigation layer
+  #define N(x) LT(_NAVIGATION, x)
+
   [_NAVIGATION] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      OSM_GUI, N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0),                            N_LEFT,  N_DOWN,  N_UP,    N_RGHT,  _______, OSM_GUI,
@@ -122,6 +109,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   #define N_END N(KC_END)
   #define N_PGDN N(KC_PGDN)
   #define N_PGUP N(KC_PGUP)
+
+  // Use a different range for N(x) with ctrl as an additional modifier
+  #define NC(x) LT(_NAVIGATION, 0x0053 + x)
+  // Use a different range for N(x) with alt as an additional modifier
+  #define NA(x) LT(_NAVIGATION, 0x00A2 + x)
+
  [_NAVIGATION2] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      OSM_GUI, NA(KC_1),NA(KC_2),NA(KC_3),NA(KC_4),NA(KC_5),                           NA(KC_6),NA(KC_7),NA(KC_8),NA(KC_9),NA(KC_0),OSM_GUI,
@@ -136,6 +129,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
+  // Layer tap key with no practical use because layer 0 is always active
+  #define NUM_(x) LT(0, KC_##x)
   [_NUMBERS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      OSM_GUI, _______, _______, _______, _______, _______,                            _______, KC_F10,  KC_F11,  KC_F12,  _______, OSM_GUI,
@@ -165,6 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
+  #define TL_G(x) TG(_GAMING##x)
   [_GAMING1] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    TL_G(1),
@@ -179,6 +175,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
+  #define LA_G2a MO(_GAMING2a)
+  #define LA_G2b MO(_GAMING2b)
   [_GAMING2] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    TL_G(2),
