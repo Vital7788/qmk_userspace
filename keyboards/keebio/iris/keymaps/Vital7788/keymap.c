@@ -67,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_SYMBOLS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     OSM_GUI, NAV_(6), NAV_(7), NAV_(8), NAV_(9), NAV_(0),                            _______, _______, _______, _______, _______, OSM_GUI,
+     OSM_GUI, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_SFT, XXXXXXX, KC_PLUS, KC_LPRN, KC_RPRN, KC_GRV,                             KC_HASH, KC_RBRC, KC_LBRC, KC_PERC, XXXXXXX, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -93,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAVIGATION] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     OSM_GUI, N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0),                            N_LEFT,  N_DOWN,  N_UP,    N_RGHT,  _______, OSM_GUI,
+     OSM_GUI, N(KC_1), N(KC_2), N(KC_3), N(KC_4), N(KC_5),                            N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0), OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_SFT, N(KC_Q), N(KC_W), N(KC_E), N(KC_R), N(KC_T),                            N(KC_Y), N(KC_U), N(KC_I), N(KC_O), N(KC_P), OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -101,7 +101,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_ALT, N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B), _______,          _______, N(KC_N), N(KC_M), N_COMM,  N_DOT,   N_SLSH,  OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______,N(KC_SPC),N(KC_BSPC),               N(KC_ESC),N(KC_ENT),_______
+                                    _______,N(KC_SPC),N(KC_BSPC),                _______,N(KC_ENT),_______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -401,6 +401,8 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 #endif
 
+static uint8_t nav_active_count = 0;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case OSM_GUI:
@@ -431,20 +433,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case NAV_(1) ... NAV_(9):
             if (record->event.pressed) {
-                if (record->tap.count) {
-                    tap_code16(LGUI(keycode - NAV_(1) + KC_1));
-                } else {
-                    tap_code16(LSG(keycode - NAV_(1) + KC_1));
+                if (nav_active_count == 0) {
+                    register_code(KC_LGUI);
+                    if (!record->tap.count) {
+                        register_code(KC_LSFT);
+                    }
+                }
+                nav_active_count++;
+                register_code16(keycode - NAV_(1) + KC_1);
+            } else {
+                unregister_code16(keycode - NAV_(1) + KC_1);
+                if (nav_active_count > 0) nav_active_count--;
+                if (nav_active_count == 0) {
+                    if (!record->tap.count) {
+                        unregister_code(KC_LSFT);
+                    }
+                    unregister_code(KC_LGUI);
                 }
             }
             return false;
 
         case N(KC_A) ... N(KC_UP):
             if (record->event.pressed) {
-                if (record->tap.count) {
-                    tap_code16(keycode - N(KC_A) + KC_A);
-                } else {
-                    tap_code16(LSFT(keycode - N(KC_A) + KC_A));
+                if (!record->tap.count) {
+                    register_code(KC_LSFT);
+                }
+                register_code16(keycode - N(KC_A) + KC_A);
+            } else {
+                unregister_code16(keycode - N(KC_A) + KC_A);
+                if (!record->tap.count) {
+                    unregister_code(KC_LSFT);
                 }
             }
             return false;
