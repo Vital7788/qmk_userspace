@@ -9,9 +9,9 @@ enum layers {
     _GAMING3,
     _GAMING4,
     _NAVIGATION,
-    _NAVIGATION2,
     _SYMBOLS,
     _NUMBERS,
+    _FKEYS,
     _SYSTEM,
     _LAYERS
 };
@@ -37,23 +37,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   #define THUMB5 LT(_SYMBOLS, KC_ENT)
   #define THUMB6 MT(MOD_LALT, KC_TAB)
   #define NAV MO(_NAVIGATION)
-  #define NAV2 MO(_NAVIGATION2)
+  #define FKEYS MO(_FKEYS)
 
   #define COPY LCTL(KC_INS)
   #define PASTE LSFT(KC_INS)
 
-  // Random unused range since regular number range is already being used by NUM_(x) macro
-  #define NAV_(x) LT(0, 0x0058 + 0x000##x)
-
   [_QWERTY] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_ESC,  NAV_(1), NAV_(2), NAV_(3), NAV_(4), NAV_(5),                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
+     KC_ESC,  G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5),                            KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_INS,  LAYERS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      PASTE,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      COPY,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, KC_PSCR,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              NAV2,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
+     KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    NAV,              FKEYS,   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_CAPS,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     THUMB1,  THUMB2,  THUMB3,                    THUMB4,  THUMB5,  THUMB6
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -65,9 +62,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      ! < * _ ~    @ $ ^ > \
   */
 
+  #define LSG_(x) LSG(KC_##x)
   [_SYMBOLS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     OSM_GUI, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, OSM_GUI,
+     OSM_GUI, LSG_(1), LSG_(2), LSG_(3), LSG_(4), LSG_(5),                            LSG_(6), LSG_(7), LSG_(8), LSG_(9), LSG_(0), OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_SFT, XXXXXXX, KC_PLUS, KC_LPRN, KC_RPRN, KC_GRV,                             KC_HASH, KC_RBRC, KC_LBRC, KC_PERC, XXXXXXX, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -101,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_ALT, N(KC_Z), N(KC_X), N(KC_C), N(KC_V), N(KC_B), _______,          _______, N(KC_N), N(KC_M), N_COMM,  N_DOT,   N_SLSH,  OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______,N(KC_SPC),N(KC_BSPC),                _______,N(KC_ENT),_______
+                                    _______,N(KC_SPC),N(KC_BSPC),                _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -110,22 +108,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   #define N_PGDN N(KC_PGDN)
   #define N_PGUP N(KC_PGUP)
 
-  // Use a different range for N(x) with ctrl as an additional modifier
-  #define NC(x) LT(_NAVIGATION, 0x0053 + x)
-  // Use a different range for N(x) with alt as an additional modifier
-  #define NA(x) LT(_NAVIGATION, 0x00A2 + x)
-
- [_NAVIGATION2] = LAYOUT(
+ [_FKEYS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     OSM_GUI, NA(KC_1),NA(KC_2),NA(KC_3),NA(KC_4),NA(KC_5),                           NA(KC_6),NA(KC_7),NA(KC_8),NA(KC_9),NA(KC_0),OSM_GUI,
+     OSM_GUI, _______, KC_F10,  KC_F11,  KC_F12,  _______,                            _______, _______, _______, _______, _______, OSM_GUI,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     OSM_SFT, NC(KC_1),NC(KC_2),NC(KC_3),NC(KC_4),NC(KC_5),                           NC(KC_6),NC(KC_7),NC(KC_8),NC(KC_9),NC(KC_0),OSM_SFT,
+     OSM_SFT, KC_F12,  KC_F7,   KC_F8,   KC_F9,   _______,                            _______, KC_7,    KC_8,    KC_9,    _______, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     OSM_CTL, N(KC_1), N(KC_2), N(KC_3), N(KC_4), N(KC_5),                            N_LEFT,  N_DOWN,  N_UP,    N_RGHT,  _______, OSM_CTL,
+     OSM_CTL, KC_F11,  KC_F4,   KC_F5,   KC_F6,   _______,                            _______, KC_4,    KC_5,    KC_6,    KC_0,    OSM_CTL,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     OSM_ALT, N(KC_6), N(KC_7), N(KC_8), N(KC_9), N(KC_0), _______,          _______, N_HOME,  N_PGDN,  N_PGUP,  N_END,   _______, OSM_ALT,
+     OSM_ALT, KC_F10,  KC_F1,   KC_F2,   KC_F3,   _______, _______,          _______, _______, KC_1,    KC_2,    KC_3,    _______, OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______,N(KC_SPC),N(KC_BSPC),               N(KC_ESC),N(KC_ENT),_______
+                                    _______, _______, _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -401,8 +394,6 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 #endif
 
-static uint8_t nav_active_count = 0;
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case OSM_GUI:
@@ -431,64 +422,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
-        case NAV_(1) ... NAV_(9):
-            if (record->event.pressed) {
-                if (nav_active_count == 0) {
-                    register_code(KC_LGUI);
-                    if (!record->tap.count) {
-                        register_code(KC_LSFT);
-                    }
-                }
-                nav_active_count++;
-                register_code16(keycode - NAV_(1) + KC_1);
-            } else {
-                unregister_code16(keycode - NAV_(1) + KC_1);
-                if (nav_active_count > 0) nav_active_count--;
-                if (nav_active_count == 0) {
-                    if (!record->tap.count) {
-                        unregister_code(KC_LSFT);
-                    }
-                    unregister_code(KC_LGUI);
-                }
-            }
-            return false;
-
         case N(KC_A) ... N(KC_UP):
             if (record->event.pressed) {
-                if (!record->tap.count) {
-                    register_code(KC_LSFT);
-                }
-                register_code16(keycode - N(KC_A) + KC_A);
-            } else {
-                unregister_code16(keycode - N(KC_A) + KC_A);
-                if (!record->tap.count) {
-                    unregister_code(KC_LSFT);
-                }
-            }
-            return false;
-
-        case NC(KC_A) ... NC(KC_UP):
-            if (record->event.pressed) {
                 if (record->tap.count) {
-                    tap_code16(LCTL(keycode - NC(KC_A) + KC_A));
+                    tap_code16(keycode - N(KC_A) + KC_A);
                 } else {
-                    tap_code16(LCS(keycode - NC(KC_A) + KC_A));
-                }
-            }
-            return false;
-
-        case NA(KC_A) ... NA(KC_UP):
-            if (record->event.pressed) {
-                if (record->tap.count) {
-                    tap_code16(LALT(keycode - NA(KC_A) + KC_A));
-                } else {
-                    tap_code16(LSA(keycode - NA(KC_A) + KC_A));
+                    tap_code16(LSFT(keycode - N(KC_A) + KC_A));
                 }
             }
             return false;
 
         case NAV:
-        case NAV2:
             if (record->event.pressed) {
                 register_code(KC_LGUI);
             } else {
