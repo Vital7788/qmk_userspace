@@ -21,12 +21,6 @@ enum layers {
 #define OSM_ALT OSM(MOD_LALT)
 #define OSM_GUI OSM(MOD_LGUI)
 
-const uint16_t PROGMEM caps[] = {KC_LSFT, KC_RSFT, COMBO_END};
-
-combo_t key_combos[] = {
-    COMBO(caps, KC_CAPS),
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   #define LAYERS MO(_LAYERS)
@@ -130,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_SFT, KC_PSLS, KC_PAST, KC_PMNS, KC_PPLS, _______,                            _______, NUM_(7), NUM_(8), NUM_(9), _______, OSM_SFT,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     OSM_CTL, OSM_GUI, OSM_ALT, OSM_CTL, OSM_SFT, KC_NUM,                             _______, NUM_(4), NUM_(5), NUM_(6), _______, OSM_CTL,
+     OSM_CTL, OSM_GUI, OSM_ALT, OSM_CTL, OSM_SFT, KC_NUM,                             _______, NUM_(4), NUM_(5), NUM_(6), KC_0,    OSM_CTL,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      OSM_ALT, _______, KC_EQL,  KC_COMM, KC_DOT,  _______, _______,          _______, _______, NUM_(1), NUM_(2), NUM_(3), _______, OSM_ALT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘

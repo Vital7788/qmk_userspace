@@ -1,3 +1,3 @@
-COMBO_ENABLE = yes
+# COMBO_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
 # KEY_LOCK_ENABLE = yes
