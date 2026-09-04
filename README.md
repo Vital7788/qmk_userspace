@@ -2,6 +2,15 @@
 
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
 
+## Setup
+1. Install qmk: Create a venv, `pip install qmk`, `qmk setup`
+1. Clone this fork
+1. Clone QMK firmware: git@github.com:qmk/qmk_firmware.git
+1. Enable userspace: `qmk config user.overlay_dir="path/to/userspace"`
+1. Set QMK home: `qmk config user.qmk_home="path/to/qmk_firmware"`
+1. Set keyboard: `qmk config user.keyboard=keebio/iris/rev8`
+1. Set keymap: `qmk config user.keymap=vital7788`
+
 ## Howto configure your build targets
 
 1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
